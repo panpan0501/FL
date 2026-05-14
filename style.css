@@ -1099,14 +1099,175 @@ section {
     font-size: 0.85rem;
   }
 
-  .navbar .container {
+/* 修正後的原本樣式 */
+.navbar .container {
     padding: 12px 16px;
-  }
+    grid-template-columns: 1fr; /* 把它收進括號裡了 */
+}
 
+.team-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .team-grid {
-    grid-template-columns: 1fr;
-  }
+}
+
+/* =========================================
+   「無定型 FARMLESS」視覺旗艦版
+   線條明顯化 + 煙霧感色塊 (參考 image_95c335.jpg)
+   ========================================= */
+
+body {
+    background: transparent !important; 
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* 1. 底層色塊：調整模糊度，讓形狀變明顯 */
+body::before {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -999;
+    
+    /* 調整漸層比例，讓顏色集中一點 */
+    background: radial-gradient(circle at 30% 40%, #f5eadd 0%, rgba(245, 234, 221, 0) 40%), /* 米色 */
+                radial-gradient(circle at 70% 60%, #e6a86e 0%, rgba(230, 168, 110, 0) 45%), /* 橘色 */
+                radial-gradient(circle at 40% 70%, #1a1a1a 0%, rgba(26, 26, 26, 0) 50%);    /* 黑色 */
+    
+    background-color: #fdfaf5; /* 參考圖片底部的極淺米色 */
+    filter: blur(40px); /* 降低模糊感，讓色塊形狀變明顯 */
+    animation: smokeFlow 20s ease-in-out infinite;
+}
+
+/* 2. 線條層：模擬圖片中的細曲線 */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -998;
+    
+    /* 這裡繪製了兩條明顯的動態曲線 (深墨色與暖橘) */
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><path d="M0,200 C300,50 600,350 1200,200" stroke="%23333333" stroke-width="1.2" fill="none" opacity="0.7"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><path d="M0,150 C400,300 800,0 1200,150" stroke="%23e6a86e" stroke-width="1.2" fill="none" opacity="0.6"/></svg>');
+    
+    background-repeat: repeat-x;
+    background-size: 100% 60%;
+    background-position: center;
+    animation: lineWave 15s linear infinite;
+}
+
+/* --- 動畫設定 --- */
+
+@keyframes smokeFlow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(3%, 5%) scale(1.05); }
+}
+
+@keyframes lineWave {
+    from { background-position-x: 0, 0; }
+    to { background-position-x: 1200px, -1200px; }
+}
+
+/* 讓文字在淺色底色下變深，像 LOGO 裡的字一樣 */
+nav a, h1, h2, h3, p, span {
+    color: #333333 !important; /* 統一改為深灰色/黑色 */
+    position: relative;
+    z-index: 10;
+}
+
+/* 透明化原本的深色區塊 */
+section, .hero, .main-content, header, footer, .container, .wrapper {
+    background: transparent !important;
+    background-image: none !important;
+}
+/* --- 修正導覽列亮度：救回上方選單 --- */
+
+header, 
+nav, 
+.navbar {
+    background-color: rgba(253, 250, 245, 0.8) !important; /* 加上半透明的米白色，對齊 LOGO 底色 */
+    backdrop-filter: blur(10px); /* 增加毛玻璃質感，讓它看起來很高階 */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* 輕微陰影，讓選單跟背景有層次感 */
+}
+
+/* 確保選單裡的文字是清晰的深灰色 */
+nav a, 
+.nav-links a, 
+.logo-text, 
+.navbar-brand {
+    color: #333333 !important;
+    font-weight: 500;
+}
+
+/* 當滑鼠移到選單時，變成品牌橘色 */
+nav a:hover {
+    color: #e6a86e !important;
+}
+
+/* 修正 LOGO 文字顏色 */
+.logo-container h1, 
+.logo-container span {
+    color: #333333 !important;
+}
+/* --- 移除藍色：統一「無定型」視覺風格 --- */
+
+/* --- 最終版：左橘色實心 + 右毛玻璃質感 --- */
+
+/* 1. 左邊按鈕：品牌暖橘色 */
+.btn-primary, 
+button:first-of-type {
+    background-color: #e6a86e !important; /* 品牌暖橘 */
+    color: #ffffff !important;
+    border: none !important;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    box-shadow: 0 4px 15px rgba(230, 168, 110, 0.3) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.btn-primary:hover, 
+button:first-of-type:hover {
+    background-color: #333333 !important; /* 滑過變深墨色 */
+    transform: translateY(-2px);
+}
+
+/* 2. 右邊按鈕：毛玻璃質感 (Glassmorphism) */
+.btn-secondary, 
+button:last-of-type {
+    background: rgba(255, 255, 255, 0.2) !important; /* 極低透明度白色 */
+    backdrop-filter: blur(10px) !important;        /* 關鍵毛玻璃模糊 */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(51, 51, 51, 0.3) !important; /* 細緻的深色邊框 */
+    color: #333333 !important;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer;
+}
+
+.btn-secondary:hover, 
+button:last-of-type:hover {
+    background: rgba(51, 51, 51, 0.1) !important;
+    border-color: #333333 !important;
+    transform: translateY(-2px);
+}
+video {
+  animation: fadeInOut 10s infinite; /* 這裡的秒數要對應你影片的長度 */
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { opacity: 0; }
 }
